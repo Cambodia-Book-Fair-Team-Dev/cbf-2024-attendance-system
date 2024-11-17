@@ -77,30 +77,6 @@ main .teams svg circle {
   stroke-dashoffset: 92;
 }
 
-main .teams .eg svg circle {
-  stroke-dashoffset: 25;
-  stroke-dasharray: 210;
-}
-
-main .teams .mth svg circle {
-  stroke-dashoffset: 7;
-  stroke-dasharray: 210;
-}
-
-main .teams .cs svg circle {
-  stroke-dashoffset: 35;
-  stroke-dasharray: 210;
-}
-
-main .teams .cg svg circle {
-  stroke-dashoffset: 0;
-  stroke-dasharray: 210;
-}
-
-main .teams .net svg circle {
-  stroke-dashoffset: 5;
-  stroke-dasharray: 210;
-}
 .team.core-team-icon {
   background-color: #ff5722;
 }

@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
         setTeams(filteredData);
       } catch (error) {
         console.error(error);
-        setErrorMessage("Failed to fetch teams");
+        setErrorMessage("Server Error");
       } finally {
         setTeamsLoading(false);
       }
