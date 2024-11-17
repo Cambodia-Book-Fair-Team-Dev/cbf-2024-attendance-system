@@ -1,0 +1,125 @@
+/* Attendance Table Container */
+.attendance-table {
+  margin: 20px auto;
+  width: 80%;
+  padding: 20px;
+  background-color: var(--attendance-table-bg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  color: var(--attendance-table-text);
+}
+
+/* Table Heading */
+.attendance-table h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--attendance-table-text);
+}
+
+/* Loading Indicator */
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--attendance-table-text);
+}
+
+/* Table Styles */
+.attendance-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--attendance-table-text);
+  cursor: pointer; /* Add cursor pointer to indicate clickable rows */
+}
+
+/* Header Row Styles */
+.attendance-table th {
+  background-color: var(--attendance-table-header-bg);
+  color: var(--attendance-table-text);
+  font-weight: bold;
+}
+
+/* Table Row Styles */
+.attendance-table tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.attendance-table tr:nth-child(even) {
+  background-color: var(--attendance-table-row-bg);
+}
+
+.attendance-table tr:hover {
+  background-color: var(--attendance-table-row-hover-bg);
+}
+
+/* Attendance Details */
+.attendance-details {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: var(--attendance-table-bg);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-details h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--attendance-table-text);
+}
+
+.attendance-details p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: var(--attendance-table-text);
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the circle */
+  left: 50%;
+  margin-left: -80px; /* Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+/* Show the tooltip text when hovering */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

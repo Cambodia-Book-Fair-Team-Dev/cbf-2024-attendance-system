@@ -1,20 +1,25 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./Components/Header";
-import Dashboard from "./Components/Dashboard";
+import Dashboard from "./Components/Home";
 import QRScanner from "./Components/QRScanner";
-import "./App.css"; // Ensure this import is present
+import { ThemeProvider } from "./ThemeContext";
+import "./App.css";
+import Volunteer from "./Components/Volunteer";
+import AttendanceDashboard from "./Components/AttendanceDashboard";
 
 function App() {
   return (
-    <Router>
-      <Header />
-      {/* <Navbar /> */}
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/scan" element={<QRScanner />} />
-        {/* Add other routes as needed */}
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/scan" element={<QRScanner />} />
+          <Route path="/volunteer" element={<Volunteer />} />
+          <Route path="/dashboard" element={<AttendanceDashboard />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 

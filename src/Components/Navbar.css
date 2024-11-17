@@ -1,0 +1,44 @@
+header,
+header .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 3rem;
+    color: var(--color-info);
+    /* position: fixed; Add this line */
+    top: 0; /* Add this line */
+    width: 100%; /* Add this line */
+    background-color: var(--color-background); /* Add this line to ensure background color */
+    z-index: 1000; /* Add this line to ensure it stays on top */
+}
+
+header .navbar a {
+    display: flex;
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 3.7rem;
+    transition: all 300ms ease;
+    padding: 0 2rem;
+}
+
+header .navbar a:hover {
+    padding-top: 1.5rem;
+}
+
+header .navbar a.active {
+    background: var(--color-light);
+    color: var(--color-primary);
+}
+
+header .navbar a.active::before {
+    content: "";
+    background-color: var(--color-primary);
+    position: absolute;
+    height: 5px;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
