@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../Components/AttendanceDashboard.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { API_BASE_URL } from "../api/config";
+import "../Pages/AttendanceDashboard.css";
+import SkeletonTable from "../Components/SkeletonTable";
 
 interface Meal {
   breakfast: boolean;
@@ -29,11 +32,18 @@ const AttendanceDashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedAttendance, setSelectedAttendance] =
     useState<Attendance | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAttendances = async () => {
+      if (!selectedDate) return;
       try {
-        const response = await axios.get(`${API_BASE_URL}/attendances`);
+        const response = await axios.get(
+          `${API_BASE_URL}/attendances/by-date/${
+            selectedDate.toISOString().split("T")[0]
+          }`
+        );
         const sortedData = response.data.sort(
           (a: Attendance, b: Attendance) => {
             return (
@@ -42,15 +52,22 @@ const AttendanceDashboard: React.FC = () => {
           }
         );
         setAttendances(sortedData);
+        setErrorMessage(null); // Clear any previous error message
       } catch (error) {
-        console.error("Error fetching attendances:", error);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setErrorMessage("No attendances found for the selected date.");
+          setAttendances([]); // Clear previous data
+        } else {
+          console.error("Error fetching attendances:", error);
+          setErrorMessage("An error occurred while fetching attendances.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchAttendances();
-  }, []);
+  }, [selectedDate]);
 
   const handleRowClick = (attendance: Attendance) => {
     setSelectedAttendance(attendance);
@@ -163,9 +180,21 @@ const AttendanceDashboard: React.FC = () => {
 
   return (
     <div className="attendance-table">
-      <h2>Attendance List</h2>
+      <div className="attendance-header">
+        <h2 className="attendance-text">Attendance List</h2>
+        <div className="date-picker">
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date: Date | null) => setSelectedDate(date)}
+            dateFormat="yyyy-MM-dd"
+          />
+          <button onClick={() => setSelectedDate(new Date())}>Today</button>
+        </div>
+      </div>
       {loading ? (
-        <div className="loading">Loading...</div>
+        <SkeletonTable />
+      ) : errorMessage ? (
+        <div className="error-message">{errorMessage}</div>
       ) : (
         <>
           <table>
@@ -205,9 +234,6 @@ const AttendanceDashboard: React.FC = () => {
           {selectedAttendance && (
             <div className="attendance-details">
               <h3>Attendance Details</h3>
-              <p>
-                <strong>ID:</strong> {selectedAttendance.id}
-              </p>
               <p>
                 <strong>Volunteer ID:</strong> {selectedAttendance.volunteer_id}
               </p>

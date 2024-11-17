@@ -123,3 +123,52 @@
   visibility: visible;
   opacity: 1;
 }
+/* Attendance Table Heading Container */
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.attendance-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--attendance-table-text);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Date Picker Container */
+.date-picker {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* Date Picker Input */
+.date-picker input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+/* Today Button */
+.date-picker button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: var(--attendance-table-header-bg);
+  color: var(--attendance-table-text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.date-picker button:hover {
+  background-color: var(--attendance-table-row-hover-bg);
+}

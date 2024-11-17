@@ -1,0 +1,247 @@
+/* Home.css */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 4rem;
+}
+
+main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  margin-top: 1.4rem;
+}
+
+main .teams {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.6rem;
+}
+
+main .teams > div {
+  background-color: var(--color-white);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  margin-top: 1rem;
+  box-shadow: var(--box-shadow);
+  transition: all 300ms ease;
+}
+
+main .teams > div:hover {
+  box-shadow: none;
+}
+
+main .teams > div span {
+  background-color: var(--color-primary);
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: var(--color-white);
+  font-size: 1.5rem;
+}
+
+main .teams > div.mth span,
+main .teams > div.cg span {
+  background: var(--color-danger);
+}
+
+main .teams > div.cs span {
+  background: var(--color-success);
+}
+
+main .teams h3 {
+  margin: 1rem 0 0.6rem;
+  font-size: 1rem;
+}
+
+main .teams .progress {
+  position: relative;
+  width: 89px;
+  height: 89px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+main .teams svg circle {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: translate(5px, 5px);
+  stroke-dasharray: 110;
+  stroke-dashoffset: 92;
+}
+
+main .teams .eg svg circle {
+  stroke-dashoffset: 25;
+  stroke-dasharray: 210;
+}
+
+main .teams .mth svg circle {
+  stroke-dashoffset: 7;
+  stroke-dasharray: 210;
+}
+
+main .teams .cs svg circle {
+  stroke-dashoffset: 35;
+  stroke-dasharray: 210;
+}
+
+main .teams .cg svg circle {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 210;
+}
+
+main .teams .net svg circle {
+  stroke-dashoffset: 5;
+  stroke-dasharray: 210;
+}
+.team.core-team-icon {
+  background-color: #ff5722;
+}
+
+.team.event-facilitator-icon {
+  background-color: #ff9800;
+}
+
+.team.operation-icon {
+  background-color: #4caf50;
+}
+
+.team.procurement-icon {
+  background-color: #2196f3;
+}
+
+.team.sales-icon {
+  background-color: #9c27b0;
+}
+
+.team.public-relations-icon {
+  background-color: #3f51b5;
+}
+
+main .teams .progress .number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main .teams small {
+  margin-top: 1rem;
+  display: block;
+}
+
+main .timetable {
+  margin-top: 2rem;
+}
+
+main .timetable h2 {
+  margin-bottom: 0.8rem;
+}
+
+main .timetable table {
+  background-color: var(--color-white);
+  width: 100%;
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding);
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  transition: all 300ms ease;
+}
+
+main .timetable span {
+  display: none;
+}
+
+main .timetable table:hover {
+  box-shadow: none;
+}
+
+main table tbody td {
+  height: 2.8rem;
+  border-bottom: 1px solid var(--color-light);
+  color: var(--color-dark-varient);
+}
+
+main table tbody tr:last-child td {
+  border: none;
+}
+
+main .timetable.active {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+main .timetable.active h2 {
+  color: var(--color-dark);
+}
+
+main .timetable.active table {
+  width: 90%;
+  max-width: 1000px;
+  position: relative;
+}
+
+main .timetable.active span {
+  display: block;
+  font-size: 2rem;
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+.timetable div {
+  position: relative;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main .timetable.active .closeBtn {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+}
+
+
+
+main .teams > div span.core-team-icon {
+  background-color: #ff5722;
+}
+
+main .teams > div span.event-facilitator-icon {
+  background-color: #ff9800;
+}
+
+main .teams > div span.operation-icon {
+  background-color: #4caf50;
+}
+
+main .teams > div span.procurement-icon {
+  background-color: #2196f3;
+}
+
+main .teams > div span.sales-icon {
+  background-color: #9c27b0;
+}
+
+main .teams > div span.public-relations-icon {
+  background-color: #3f51b5;
+}

@@ -1,6 +1,6 @@
 // src/Components/Header.tsx
 import React from "react";
-import Navbar from "./Navbar";
+import Navbar from "../Pages/Navbar";
 import { useTheme } from "../ThemeContext";
 import "../App.css"; // Ensure this import is present
 

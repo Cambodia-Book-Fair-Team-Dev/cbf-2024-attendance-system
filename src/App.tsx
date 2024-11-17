@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./Components/Header";
-import Dashboard from "./Components/Home";
-import QRScanner from "./Components/QRScanner";
+import Header from "./Pages/Header";
+import Dashboard from "./Pages/Home";
+import QRScanner from "./Pages/QRScanner";
 import { ThemeProvider } from "./ThemeContext";
 import "./App.css";
-import Volunteer from "./Components/Volunteer";
-import AttendanceDashboard from "./Components/AttendanceDashboard";
+import Volunteer from "./Pages/Volunteer";
+import AttendanceDashboard from "./Pages/AttendanceDashboard";
 
 function App() {
   return (
