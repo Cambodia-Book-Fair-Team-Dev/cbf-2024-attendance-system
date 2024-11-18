@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
         );
         setAttendances(response.data);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
         setErrorMessage("Failed to fetch attendances");
       } finally {
         setLoading(false);
