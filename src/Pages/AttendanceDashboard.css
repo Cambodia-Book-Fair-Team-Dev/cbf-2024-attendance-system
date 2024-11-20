@@ -182,3 +182,46 @@
 .date-picker button:hover {
   background-color: var(--attendance-table-row-hover-bg);
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Hide unnecessary columns on tablets and phones */
+  .attendance-table th:nth-child(1), /* Volunteer ID */
+  .attendance-table th:nth-child(7), /* Note */
+  .attendance-table td:nth-child(1),
+  .attendance-table td:nth-child(7) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hide more columns on phones */
+  .attendance-table th:nth-child(4), /* Check In */
+  .attendance-table th:nth-child(5), /* Check Out */
+  .attendance-table td:nth-child(4),
+  .attendance-table td:nth-child(5) {
+    display: none;
+  }
+
+  /* Adjust date picker */
+  .date-picker input {
+    display: none;
+  }
+
+  .date-picker button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+/* Adjust tooltip for smaller screens */
+@media (max-width: 768px) {
+  .tooltip .tooltiptext {
+    width: 120px;
+    font-size: 0.8rem;
+  }
+}

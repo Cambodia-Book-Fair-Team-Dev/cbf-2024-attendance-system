@@ -4,7 +4,7 @@ import { useDropzone } from "react-dropzone";
 import jsQR from "jsqr";
 import "./QRScanner.css";
 import { API_BASE_URL } from "../api/config";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Import Material UI back icon
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface Volunteer {
   id: string;
@@ -12,10 +12,8 @@ interface Volunteer {
   team: string;
 }
 
-// Define valid action keys as a union type
 type EndpointKey = "checkin" | "checkout" | "checkmeal" | "confirmReturn";
 
-// Define the endpoint map with specific keys
 const endpointMap: Record<EndpointKey, string> = {
   checkin: `${API_BASE_URL}/checkin`,
   checkout: `${API_BASE_URL}/checkout`,
@@ -30,37 +28,39 @@ const QRScanner = () => {
     checked_out: false,
     note: null,
     returning: false,
+    meals: {
+      breakfast: false,
+      lunch: false,
+      dinner: false,
+    },
   });
   const [showMealOptions, setShowMealOptions] = useState(false);
   const [showReturnConfirmation, setShowReturnConfirmation] = useState(false);
+  const [returning, setReturning] = useState(false);
   const [returnNote, setReturnNote] = useState("");
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); // Loader state
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Show toast notifications
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  // Handle QR code scan
   const handleScan = async (scannedData: string) => {
     try {
       const volunteerData = JSON.parse(scannedData);
-      setLoading(true); // Start loader
+      setLoading(true);
       const response = await fetch(`${API_BASE_URL}/scan`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(volunteerData),
       });
 
       const data = await response.json();
-      setLoading(false); // Stop loader
+      setLoading(false);
 
       if (response.ok) {
         setVolunteer({
@@ -74,61 +74,89 @@ const QRScanner = () => {
         showToast(data.detail || "Error scanning volunteer", "error");
       }
     } catch (error) {
-      setLoading(false); // Stop loader on error
+      setLoading(false);
       console.error("Error parsing scanned data:", error);
       showToast("Invalid QR code format.", "error");
     }
   };
 
-  // Handle actions like Check-In, Check-Out, and Check Meal
-  const handleAction = async (action: EndpointKey, mealType?: string) => {
+  const handleAction = async (
+    action: EndpointKey,
+    mealType?: string,
+    returning?: boolean,
+    note?: string
+  ) => {
     const endpoint = endpointMap[action];
     if (!endpoint || !volunteer) return;
 
     try {
-      setLoading(true); // Start loader
+      setLoading(true);
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           action === "checkmeal"
             ? { volunteer_id: volunteer.id, meal_type: mealType }
-            : { volunteer_id: volunteer.id, note: returnNote }
+            : action === "checkout"
+            ? { volunteer_id: volunteer.id, returning, note }
+            : { volunteer_id: volunteer.id }
         ),
       });
 
-      const data = await response.json();
-      setLoading(false); // Stop loader
+      if (!response.ok) {
+        const errorData = await response.json();
+        showToast(errorData.detail || "Error performing action", "error");
+        setLoading(false);
+        return;
+      }
 
-      if (response.ok) {
-        showToast(data.message, "success");
-        if (action === "checkin")
-          setAttendanceStatus((prev) => ({ ...prev, checked_in: true }));
-        if (action === "checkout") setShowReturnConfirmation(true);
-      } else {
-        showToast(data.detail || "Error performing action", "error");
+      setLoading(false);
+
+      if (action === "checkmeal" && mealType) {
+        showToast(`${mealType} meal checked successfully!`, "success");
+        setAttendanceStatus((prevStatus) => ({
+          ...prevStatus,
+          meals: { ...prevStatus.meals, [mealType]: true },
+        }));
+      } else if (action === "checkin") {
+        handleBack();
+      } else if (action === "checkout") {
+        showToast("Check-out successful!", "success");
+        setTimeout(() => {
+          handleBack();
+        }, 2000);
       }
     } catch (error) {
-      setLoading(false); // Stop loader on error
+      setLoading(false);
       console.error("Error:", error);
       showToast("An error occurred. Please try again.", "error");
     }
   };
 
-  // Reset state when Back icon is clicked
+  const handleCheckout = async () => {
+    if (!returning) {
+      await handleAction("checkout", undefined, false);
+    } else {
+      await handleAction("checkout", undefined, true, returnNote);
+    }
+    setShowReturnConfirmation(false);
+    setReturnNote("");
+  };
+
   const handleBack = () => {
-    setVolunteer(null); // Clear volunteer data
+    setVolunteer(null);
     setAttendanceStatus({
       checked_in: false,
       checked_out: false,
       note: null,
       returning: false,
+      meals: {
+        breakfast: false,
+        lunch: false,
+        dinner: false,
+      },
     });
     setShowMealOptions(false);
-    setShowReturnConfirmation(false);
-    setReturnNote("");
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -178,8 +206,7 @@ const QRScanner = () => {
   return (
     <div className="qr-scanner-container">
       {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
-      {loading && <div className="loader">Loading...</div>}{" "}
-      {/* Display loader */}
+      {loading && <div className="loader">Loading...</div>}
       {!volunteer ? (
         <>
           <h1>Scan Volunteer Card</h1>
@@ -206,64 +233,80 @@ const QRScanner = () => {
             />
             <h2>Volunteer Information</h2>
           </div>
-
           <h3>Name: {volunteer.name}</h3>
           <h3>Team: {volunteer.team}</h3>
-
-          {!attendanceStatus.checked_in && (
+          {!attendanceStatus.checked_in ? (
             <button onClick={() => handleAction("checkin")}>Check-In</button>
-          )}
-
-          {attendanceStatus.checked_in && !attendanceStatus.checked_out && (
+          ) : (
             <>
               <button onClick={() => setShowMealOptions(true)}>
                 Check Meal
               </button>
-              <button onClick={() => handleAction("checkout")}>
+              <button
+                onClick={() => {
+                  setShowReturnConfirmation(true);
+                }}
+              >
                 Check-Out
               </button>
+              {attendanceStatus.checked_out && attendanceStatus.returning && (
+                <button onClick={() => handleAction("checkin")}>
+                  Check-In Again
+                </button>
+              )}
             </>
           )}
-
           {showMealOptions && (
             <div className="meal-options">
-              <button onClick={() => handleAction("checkmeal", "breakfast")}>
+              <button
+                onClick={() => handleAction("checkmeal", "breakfast")}
+                disabled={attendanceStatus.meals.breakfast}
+              >
                 Breakfast
               </button>
-              <button onClick={() => handleAction("checkmeal", "lunch")}>
+              <button
+                onClick={() => handleAction("checkmeal", "lunch")}
+                disabled={attendanceStatus.meals.lunch}
+              >
                 Lunch
               </button>
-              <button onClick={() => handleAction("checkmeal", "dinner")}>
+              <button
+                onClick={() => handleAction("checkmeal", "dinner")}
+                disabled={attendanceStatus.meals.dinner}
+              >
                 Dinner
               </button>
             </div>
           )}
-
           {showReturnConfirmation && (
-            <div className="return-confirmation">
-              <p>Will you return today?</p>
+            <div className="modal">
+              <h3>Will you return today?</h3>
               <button
                 onClick={() => {
+                  setReturning(true);
                   setShowReturnConfirmation(false);
-                  setAttendanceStatus((prev) => ({ ...prev, returning: true }));
                 }}
               >
                 Yes
               </button>
-              <button onClick={handleBack}>No</button>
+              <button
+                onClick={() => {
+                  setReturning(false);
+                  handleCheckout();
+                }}
+              >
+                No
+              </button>
             </div>
           )}
-
-          {attendanceStatus.returning && (
+          {returning && (
             <div className="return-note">
               <textarea
                 placeholder="Add a note for your return"
                 value={returnNote}
                 onChange={(e) => setReturnNote(e.target.value)}
               />
-              <button onClick={() => handleAction("checkin")}>
-                Re-Check-In
-              </button>
+              <button onClick={handleCheckout}>Submit</button>
             </div>
           )}
         </>

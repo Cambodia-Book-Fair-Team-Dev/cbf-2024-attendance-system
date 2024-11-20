@@ -20,7 +20,7 @@ main {
 
 main .teams {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1.6rem;
 }
 
@@ -221,3 +221,4 @@ main .teams > div span.sales-icon {
 main .teams > div span.public-relations-icon {
   background-color: #3f51b5;
 }
+
