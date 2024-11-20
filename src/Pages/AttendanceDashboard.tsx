@@ -83,6 +83,7 @@ const AttendanceDashboard: React.FC = () => {
       minute: "numeric",
       second: "numeric",
       hour12: true,
+      // timeZone: "Asia/Phnom_Penh", // Cambodia time zone
     };
     return new Date(dateString).toLocaleString("en-US", options);
   };
@@ -117,6 +118,7 @@ const AttendanceDashboard: React.FC = () => {
         minute: "numeric",
         second: "numeric",
         hour12: true,
+        // timeZone: "Asia/Phnom_Penh", // Cambodia time zone
       };
       return new Date(timeString).toLocaleTimeString("en-US", options);
     };
@@ -166,7 +168,7 @@ const AttendanceDashboard: React.FC = () => {
         </div>
       </div>
     );
-  };
+  };  
 
   const renderNoteIcon = (note: string | null) => {
     if (!note) return null;
