@@ -24,7 +24,7 @@ interface Attendance {
   check_out: string | null;
   note: string | null;
   button_show_note: boolean;
-  meal: Meal | null;
+  meals: Meal | null;
 }
 
 const AttendanceDashboard: React.FC = () => {
@@ -224,7 +224,7 @@ const AttendanceDashboard: React.FC = () => {
                   <td>{formatDate(attendance.check_out)}</td>
                   <td>
                     {renderMealCircles(
-                      attendance.meal,
+                      attendance.meals,
                       attendance.volunteer_name
                     )}
                   </td>

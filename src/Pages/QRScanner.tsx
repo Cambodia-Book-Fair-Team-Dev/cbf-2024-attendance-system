@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useDropzone } from "react-dropzone";
 import jsQR from "jsqr";
-import "./QRScanner.css";
 import { API_BASE_URL } from "../api/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -204,20 +203,33 @@ const QRScanner = () => {
   });
 
   return (
-    <div className="qr-scanner-container">
-      {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
-      {loading && <div className="loader">Loading...</div>}
+    <div className="relative bg-white border-2 border-gray-300 p-3 w-96 flex flex-col items-center justify-center rounded-lg shadow-lg mt-14 mx-auto">
+      {toast && (
+        <div
+          className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 p-2 bg-${
+            toast.type === "success" ? "blue-500" : "red-500"
+          } text-white rounded shadow-lg z-50`}
+        >
+          {toast.message}
+        </div>
+      )}
+      {loading && (
+        <div className="border-4 border-gray-200 border-t-4 border-t-blue-500 rounded-full w-8 h-8 animate-spin my-2 mx-auto"></div>
+      )}
       {!volunteer ? (
         <>
-          <h1>Scan Volunteer Card</h1>
+          <h1 className="text-2xl text-gray-800 mb-5">Scan Volunteer Card</h1>
           <Scanner
             onScan={(result) => result && handleScan(result[0]?.rawValue || "")}
           />
-          <div {...getRootProps()} className="dropzone">
+          <div
+            {...getRootProps()}
+            className="border-2 border-dashed border-blue-500 rounded-lg p-5 text-center mt-5 cursor-pointer bg-blue-50 transition-all duration-300 hover:bg-blue-100 hover:border-blue-700"
+          >
             <input {...getInputProps()} />
-            <p>
+            <p className="text-gray-600">
               Drag & drop an image with a QR code here, or{" "}
-              <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+              <span className="underline cursor-pointer">
                 click to select a file
               </span>
             </p>
@@ -225,24 +237,37 @@ const QRScanner = () => {
         </>
       ) : (
         <>
-          <div className="volunteer-header">
+          <div className="relative w-full flex items-center justify-between mb-5">
             <ArrowBackIcon
-              className="back-icon"
+              className="absolute top-2 left-2 text-gray-800 cursor-pointer transition-all duration-300 hover:text-blue-500 hover:scale-110"
               onClick={handleBack}
               aria-label="Go back to scan page"
             />
-            <h2>Volunteer Information</h2>
+            <h2 className="text-xl font-bold text-center text-black-800 w-full">
+              Volunteer Information
+            </h2>
           </div>
-          <h3>Name: {volunteer.name}</h3>
-          <h3>Team: {volunteer.team}</h3>
+          <div className="flex flex-col items-center">
+            <h3 className="text-lg text-gray-800">Name: {volunteer.name}</h3>
+            <h3 className="text-lg text-gray-800">Team: {volunteer.team}</h3>
+          </div>
           {!attendanceStatus.checked_in ? (
-            <button onClick={() => handleAction("checkin")}>Check-In</button>
+            <button
+              className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+              onClick={() => handleAction("checkin")}
+            >
+              Check-In
+            </button>
           ) : (
             <>
-              <button onClick={() => setShowMealOptions(true)}>
+              <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                onClick={() => setShowMealOptions(true)}
+              >
                 Check Meal
               </button>
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => {
                   setShowReturnConfirmation(true);
                 }}
@@ -250,27 +275,33 @@ const QRScanner = () => {
                 Check-Out
               </button>
               {attendanceStatus.checked_out && attendanceStatus.returning && (
-                <button onClick={() => handleAction("checkin")}>
+                <button
+                  className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                  onClick={() => handleAction("checkin")}
+                >
                   Check-In Again
                 </button>
               )}
             </>
           )}
           {showMealOptions && (
-            <div className="meal-options">
+            <div className="flex flex-col items-center mt-5">
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => handleAction("checkmeal", "breakfast")}
                 disabled={attendanceStatus.meals.breakfast}
               >
                 Breakfast
               </button>
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => handleAction("checkmeal", "lunch")}
                 disabled={attendanceStatus.meals.lunch}
               >
                 Lunch
               </button>
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => handleAction("checkmeal", "dinner")}
                 disabled={attendanceStatus.meals.dinner}
               >
@@ -279,9 +310,12 @@ const QRScanner = () => {
             </div>
           )}
           {showReturnConfirmation && (
-            <div className="modal">
-              <h3>Will you return today?</h3>
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-lg shadow-lg z-50">
+              <h3 className="text-lg text-gray-800 mb-3">
+                Will you return today?
+              </h3>
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => {
                   setReturning(true);
                   setShowReturnConfirmation(false);
@@ -290,6 +324,7 @@ const QRScanner = () => {
                 Yes
               </button>
               <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
                 onClick={() => {
                   setReturning(false);
                   handleCheckout();
@@ -300,13 +335,19 @@ const QRScanner = () => {
             </div>
           )}
           {returning && (
-            <div className="return-note">
+            <div className="mt-5 p-3 border border-blue-500 bg-blue-100 rounded-lg">
               <textarea
+                className="w-full p-2 border border-gray-300 rounded-lg"
                 placeholder="Add a note for your return"
                 value={returnNote}
                 onChange={(e) => setReturnNote(e.target.value)}
               />
-              <button onClick={handleCheckout}>Submit</button>
+              <button
+                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                onClick={handleCheckout}
+              >
+                Submit
+              </button>
             </div>
           )}
         </>
