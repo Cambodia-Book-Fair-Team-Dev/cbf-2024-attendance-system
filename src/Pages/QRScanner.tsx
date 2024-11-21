@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useDropzone } from "react-dropzone";
 import jsQR from "jsqr";
+import axios from "axios";
 import { API_BASE_URL } from "../api/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -90,25 +91,16 @@ const QRScanner = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          action === "checkmeal"
-            ? { volunteer_id: volunteer.id, meal_type: mealType }
-            : action === "checkout"
-            ? { volunteer_id: volunteer.id, returning, note }
-            : { volunteer_id: volunteer.id }
-        ),
-      });
+      const response = await axios.post(
+        endpoint,
+        action === "checkmeal"
+          ? { volunteer_id: volunteer.id, meal_type: mealType }
+          : action === "checkout"
+          ? { volunteer_id: volunteer.id, returning, note }
+          : { volunteer_id: volunteer.id }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        showToast(errorData.detail || "Error performing action", "error");
-        setLoading(false);
-        return;
-      }
-
+      const data = response.data;
       setLoading(false);
 
       if (action === "checkmeal" && mealType) {
@@ -117,8 +109,11 @@ const QRScanner = () => {
           ...prevStatus,
           meals: { ...prevStatus.meals, [mealType]: true },
         }));
+        handleBack(); // Navigate back to QR scan screen
       } else if (action === "checkin") {
-        handleBack();
+        setAttendanceStatus(data.attendance_status);
+        showToast("Check-in successful!", "success");
+        handleBack(); // Navigate back to QR scan screen
       } else if (action === "checkout") {
         showToast("Check-out successful!", "success");
         setTimeout(() => {
@@ -128,7 +123,15 @@ const QRScanner = () => {
     } catch (error) {
       setLoading(false);
       console.error("Error:", error);
-      showToast("An error occurred. Please try again.", "error");
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Server response:", error.response.data);
+        showToast(
+          error.response.data.detail || "An error occurred. Please try again.",
+          "error"
+        );
+      } else {
+        showToast("An error occurred. Please try again.", "error");
+      }
     }
   };
 
@@ -287,21 +290,33 @@ const QRScanner = () => {
           {showMealOptions && (
             <div className="flex flex-col items-center mt-5">
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
+                  attendanceStatus.meals.breakfast
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-700"
+                }`}
                 onClick={() => handleAction("checkmeal", "breakfast")}
                 disabled={attendanceStatus.meals.breakfast}
               >
                 Breakfast
               </button>
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
+                  attendanceStatus.meals.lunch
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-700"
+                }`}
                 onClick={() => handleAction("checkmeal", "lunch")}
                 disabled={attendanceStatus.meals.lunch}
               >
                 Lunch
               </button>
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
+                  attendanceStatus.meals.dinner
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-500 hover:bg-blue-700"
+                }`}
                 onClick={() => handleAction("checkmeal", "dinner")}
                 disabled={attendanceStatus.meals.dinner}
               >

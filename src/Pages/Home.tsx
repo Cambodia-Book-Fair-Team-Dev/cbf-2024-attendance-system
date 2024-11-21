@@ -37,7 +37,6 @@ const HomePage: React.FC = () => {
         );
         setAttendances(response.data);
       } catch (error) {
-        // console.error(error);
         setErrorMessage("Failed to fetch attendances");
       } finally {
         setLoading(false);
@@ -97,9 +96,9 @@ const HomePage: React.FC = () => {
           ) : errorMessage ? (
             <p>{errorMessage}</p>
           ) : (
-            teams.map((team, index) => (
+            teams.map((team) => (
               <div
-                key={index}
+                key={team.title}
                 className={`team ${team.title.toLowerCase().replace(" ", "-")}`}
               >
                 <span
