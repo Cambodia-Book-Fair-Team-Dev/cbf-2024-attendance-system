@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../api/config";
 import "../Pages/Home.css";
 import SkeletonCard from "../Components/SkeletonCard";
 import SkeletonTable from "../Components/SkeletonTable";
+import { VictoryPie } from "victory";
 
 const HomePage: React.FC = () => {
   interface Attendance {
@@ -113,17 +114,22 @@ const HomePage: React.FC = () => {
                   {team.present}/{team.total}
                 </h2>
                 <div className="progress">
-                  <svg aria-label={`Progress for ${team.title}`}>
-                    <circle
-                      cx="38"
-                      cy="38"
-                      r="36"
-                      style={{
-                        strokeDasharray: "226",
-                        strokeDashoffset: 226 - (team.percentage / 100) * 226,
-                      }}
-                    ></circle>
-                  </svg>
+                  <VictoryPie
+                    data={[
+                      { x: "Present", y: team.percentage },
+                      { x: "Absent", y: 100 - team.percentage },
+                    ]}
+                    innerRadius={100}
+                    colorScale={["#89CFF0", "#e0e0e0"]}
+                    labels={() => null}
+                    style={{
+                      data: {
+                        fillOpacity: 0.9,
+                        stroke: "#fff",
+                        strokeWidth: 2,
+                      },
+                    }}
+                  />
                   <div className="number">
                     <p>{Math.round(team.percentage)}%</p>
                   </div>
