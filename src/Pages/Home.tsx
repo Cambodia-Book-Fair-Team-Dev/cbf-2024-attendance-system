@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
     <div className="container">
       <aside></aside>
       <main>
-        <h1>CBF Attendance</h1>
+        <h1>Cambodia Book Fair Attendance</h1>
         <div className="teams">
           {teamsLoading ? (
             <>

@@ -206,7 +206,7 @@ const QRScanner = () => {
   });
 
   return (
-    <div className="relative bg-white border-2 border-gray-300 p-3 w-96 flex flex-col items-center justify-center rounded-lg shadow-lg mt-14 mx-auto">
+    <div className="relative bg-white border-2 border-gray-300 p-3 w-11/12 sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-1/3 flex flex-col items-center justify-center rounded-lg shadow-lg mt-14 mx-auto">
       {toast && (
         <div
           className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 p-2 bg-${
