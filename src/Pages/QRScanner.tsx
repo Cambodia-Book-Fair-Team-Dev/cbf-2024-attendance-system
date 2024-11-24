@@ -73,9 +73,8 @@ const QRScanner = () => {
       } else {
         showToast(data.detail || "Error scanning volunteer", "error");
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
-      console.error("Error parsing scanned data:", error);
       showToast("Invalid QR code format.", "error");
     }
   };
@@ -109,29 +108,20 @@ const QRScanner = () => {
           ...prevStatus,
           meals: { ...prevStatus.meals, [mealType]: true },
         }));
-        handleBack(); // Navigate back to QR scan screen
+        handleBack();
       } else if (action === "checkin") {
         setAttendanceStatus(data.attendance_status);
         showToast("Check-in successful!", "success");
-        handleBack(); // Navigate back to QR scan screen
+        handleBack();
       } else if (action === "checkout") {
         showToast("Check-out successful!", "success");
         setTimeout(() => {
           handleBack();
         }, 2000);
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
-      console.error("Error:", error);
-      if (axios.isAxiosError(error) && error.response) {
-        console.error("Server response:", error.response.data);
-        showToast(
-          error.response.data.detail || "An error occurred. Please try again.",
-          "error"
-        );
-      } else {
-        showToast("An error occurred. Please try again.", "error");
-      }
+      showToast("An error occurred. Please try again.", "error");
     }
   };
 
@@ -246,13 +236,13 @@ const QRScanner = () => {
               onClick={handleBack}
               aria-label="Go back to scan page"
             />
-            <h2 className="text-xl font-bold text-center text-black-800 w-full">
+            <h2 className="text-2xl font-bold text-center text-black-800 w-full">
               Volunteer Information
             </h2>
           </div>
           <div className="flex flex-col items-center">
-            <h3 className="text-lg text-gray-800">Name: {volunteer.name}</h3>
-            <h3 className="text-lg text-gray-800">Team: {volunteer.team}</h3>
+            <h3 className="text-xl text-gray-800">Name: {volunteer.name}</h3>
+            <h3 className="text-xl text-gray-800">Team: {volunteer.team}</h3>
           </div>
           {!attendanceStatus.checked_in ? (
             <button

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Pages/Volunteer.css";
 import { API_BASE_URL } from "../api/config";
@@ -13,15 +14,17 @@ interface Volunteer {
 const Volunteer: React.FC = () => {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(
-    null
-  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVolunteers = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/volunteers`);
-        setVolunteers(response.data);
+        // Sort volunteers by id (ascending)
+        const sortedVolunteers = response.data.sort(
+          (a: Volunteer, b: Volunteer) => a.id.localeCompare(b.id)
+        );
+        setVolunteers(sortedVolunteers);
       } catch (error) {
         console.error("Error fetching volunteers:", error);
       } finally {
@@ -32,8 +35,8 @@ const Volunteer: React.FC = () => {
     fetchVolunteers();
   }, []);
 
-  const handleRowClick = (volunteer: Volunteer) => {
-    setSelectedVolunteer(volunteer);
+  const handleRowClick = (volunteerId: string) => {
+    navigate(`/volunteer/${volunteerId}`);
   };
 
   return (
@@ -42,43 +45,27 @@ const Volunteer: React.FC = () => {
       {loading ? (
         <SkeletonTable />
       ) : (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Team</th>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            {volunteers.map((volunteer) => (
+              <tr
+                key={volunteer.id}
+                onClick={() => handleRowClick(volunteer.id)}
+              >
+                <td>{volunteer.id}</td>
+                <td>{volunteer.name}</td>
+                <td>{volunteer.team}</td>
               </tr>
-            </thead>
-            <tbody>
-              {volunteers.map((volunteer) => (
-                <tr
-                  key={volunteer.id}
-                  onClick={() => handleRowClick(volunteer)}
-                >
-                  <td>{volunteer.id}</td>
-                  <td>{volunteer.name}</td>
-                  <td>{volunteer.team}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {selectedVolunteer && (
-            <div className="volunteer-details">
-              <h3>Volunteer Details</h3>
-              <p>
-                <strong>ID:</strong> {selectedVolunteer.id}
-              </p>
-              <p>
-                <strong>Name:</strong> {selectedVolunteer.name}
-              </p>
-              <p>
-                <strong>Team:</strong> {selectedVolunteer.team}
-              </p>
-            </div>
-          )}
-        </>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

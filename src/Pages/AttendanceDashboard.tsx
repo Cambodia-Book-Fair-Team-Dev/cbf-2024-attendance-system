@@ -58,7 +58,7 @@ const AttendanceDashboard: React.FC = () => {
           setErrorMessage("No attendances found for the selected date.");
           setAttendances([]); // Clear previous data
         } else {
-          console.error("Error fetching attendances:", error);
+          // console.error("Error fetching attendances:", error);
           setErrorMessage("An error occurred while fetching attendances.");
         }
       } finally {

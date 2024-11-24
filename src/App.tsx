@@ -8,6 +8,7 @@ import Volunteer from "./Pages/Volunteer";
 import AttendanceDashboard from "./Pages/AttendanceDashboard";
 import SelfCheckin from "./Pages/selfcheckin";
 import Login from "./Pages/login";
+import VolunteerDetails from "./Pages/VolunteerDetails";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/dashboard" element={<AttendanceDashboard />} />
           <Route path="/selfcheckin" element={<SelfCheckin />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/volunteer/:id" element={<VolunteerDetails />} />
         </Routes>
       </Router>
     </ThemeProvider>
