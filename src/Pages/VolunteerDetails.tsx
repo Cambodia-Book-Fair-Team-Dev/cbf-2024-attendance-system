@@ -96,7 +96,7 @@ const VolunteerProfile: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
+    <div className="w-11/12 sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-1/3 mx-auto p-6 bg-white shadow-md rounded-md mt-10">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         {volunteer.name}'s Profile
       </h2>
@@ -106,7 +106,7 @@ const VolunteerProfile: React.FC = () => {
             src={
               volunteer.photo_url
                 ? `${API_BASE_URL}${volunteer.photo_url}`
-                : "https://via.placeholder.com/150?text=No+Photo"
+                : "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
             }
             alt={volunteer.name}
             className="w-40 h-40 object-cover rounded-full border-2 border-gray-300"
