@@ -35,10 +35,15 @@ const Volunteer: React.FC = () => {
     fetchVolunteers();
   }, []);
 
-  const handleRowClick = (volunteerId: string) => {
-    navigate(`/volunteer/${volunteerId}`);
-  };
+  // const handleRowClick = (volunteerId: string) => {
+  //   navigate(`/volunteer/${volunteerId}`);
+  // };
 
+  const handleRowClick = (volunteerId: string) => {
+    const encodedId = btoa(volunteerId);
+    navigate(`/volunteer/${encodedId}`);
+  };
+  
   return (
     <div className="volunteer-table">
       <h2>Volunteers List</h2>

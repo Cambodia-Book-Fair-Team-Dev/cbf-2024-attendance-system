@@ -11,15 +11,23 @@ interface Volunteer {
 }
 
 const VolunteerProfile: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id: encodedId } = useParams<{ id: string }>();
   const [volunteer, setVolunteer] = useState<Volunteer | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [newPhoto, setNewPhoto] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const id = encodedId ? atob(encodedId) : null;
+
   useEffect(() => {
     const fetchVolunteer = async () => {
+      if (!id) {
+        console.error("Volunteer ID is undefined");
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await axios.get(`${API_BASE_URL}/volunteers/${id}`);
         setVolunteer(response.data);
@@ -74,8 +82,16 @@ const VolunteerProfile: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigate("/volunteer");
+navigate("/volunteer");
   };
+  // const handleBack = () => {
+  //   if (id) {
+  //     const encodedId = btoa(id);
+  //     navigate(`/volunteer/${encodedId}`);
+  //   } else {
+  //     console.error("Volunteer ID is undefined");
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -126,20 +142,15 @@ const VolunteerProfile: React.FC = () => {
           />
         </div>
         <div>
-          <p className="text-lg mb-2">
-            <strong>ID:</strong> {volunteer.id}
-          </p>
-          <p className="text-lg mb-2">
-            <strong>Name:</strong> {volunteer.name}
-          </p>
-          <p className="text-lg mb-2">
+          <p className="text-2xl mb-2 font-bold text-black">{volunteer.name}</p>
+          <p className="text-lg text-center mb-2 text-black">
             <strong>Team:</strong> {volunteer.team}
           </p>
         </div>
         <button
           onClick={handlePhotoUpload}
           disabled={uploading}
-          className={`bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 mt-4 ${
+          className={`py-2.5 px-6 text-sm bg-indigo-500 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-700 mb-8 inline-flex gap-2  ${
             uploading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
