@@ -10,6 +10,8 @@ interface Volunteer {
   id: string;
   name: string;
   team: string;
+  kh_name: string;
+  photo_url: string | null;
 }
 
 type EndpointKey = "checkin" | "checkout" | "checkmeal" | "confirmReturn";
@@ -66,7 +68,9 @@ const QRScanner = () => {
         setVolunteer({
           id: data.id,
           name: data.name,
+          kh_name: data.kh_name,
           team: data.team,
+          photo_url: data.photo_url,
         });
         setAttendanceStatus(data.attendance_status);
         showToast("Volunteer scanned successfully!", "success");
@@ -240,8 +244,21 @@ const QRScanner = () => {
               Volunteer Information
             </h2>
           </div>
+
           <div className="flex flex-col items-center">
-            <h3 className="text-xl text-gray-800">Name: {volunteer.name}</h3>
+            <img
+              src={
+                volunteer.photo_url
+                  ? `${API_BASE_URL}${volunteer.photo_url}`
+                  : "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
+              }
+              alt={volunteer.name}
+              className="w-40 h-40 object-cover rounded-full border-2 border-gray-300 mb-4"
+            />
+            <h3 className="text-3xl text-black font-kantumruy">
+              {volunteer.kh_name}
+            </h3>
+            <h3 className="text-2xl text-gray-800">{volunteer.name}</h3>
             <h3 className="text-xl text-gray-800">Team: {volunteer.team}</h3>
           </div>
           {!attendanceStatus.checked_in ? (

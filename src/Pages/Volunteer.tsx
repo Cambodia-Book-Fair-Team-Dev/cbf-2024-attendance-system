@@ -9,6 +9,7 @@ interface Volunteer {
   id: string;
   team: string;
   name: string;
+  kh_name: string;
 }
 
 const Volunteer: React.FC = () => {
@@ -55,6 +56,7 @@ const Volunteer: React.FC = () => {
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th>Khmer Name</th>
               <th>Team</th>
             </tr>
           </thead>
@@ -66,6 +68,7 @@ const Volunteer: React.FC = () => {
               >
                 <td>{volunteer.id}</td>
                 <td>{volunteer.name}</td>
+                <td>{volunteer.kh_name}</td>
                 <td>{volunteer.team}</td>
               </tr>
             ))}
