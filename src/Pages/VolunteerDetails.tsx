@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../api/config";
 interface Volunteer {
   id: string;
   name: string;
+  kh_name: string;
   team: string;
   photo_url: string | null;
 }
@@ -142,7 +143,13 @@ navigate("/volunteer");
           />
         </div>
         <div>
-          <p className="text-2xl mb-2 font-bold text-black">{volunteer.name}</p>
+          <p className="text-3xl text-center mb-2 text-black font-kantumruy">
+            {volunteer.kh_name}
+          </p>
+          <p className="text-xl text-center mb-2 text-black font-poppins">
+            {volunteer.name}
+          </p>
+
           <p className="text-lg text-center mb-2 text-black">
             <strong>Team:</strong> {volunteer.team}
           </p>
