@@ -1,8 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Pages/Navbar.css";
 
 const Navbar: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+  navigate("/login");
+  };
   return (
     <div className="navbar">
       <Link to="/" className="nav-item">
@@ -21,7 +28,7 @@ const Navbar: React.FC = () => {
         <span className="material-symbols-outlined">groups</span>
         <h3>Volunteer</h3>
       </Link>
-      <Link to="/logout" className="nav-item">
+      <Link to="/login" className="nav-item" onClick={handleLogout}>
         <span className="material-icons-sharp">logout</span>
         <h3>Logout</h3>
       </Link>
