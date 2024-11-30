@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../api/config";
+import Compressor from "compressorjs"; // Import Compressor.js
 
 interface Volunteer {
   id: string;
@@ -44,7 +45,26 @@ const VolunteerProfile: React.FC = () => {
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setNewPhoto(e.target.files[0]);
+      const file = e.target.files[0];
+
+      // Compress the image using Compressor.js
+      new Compressor(file, {
+        quality: 0.5, // Set quality to 60% (lower quality = higher compression)
+        maxWidth: 512, // Resize image to 200px width
+        maxHeight: 512, // Resize image to 200px height
+        success(result) {
+          // Convert the Blob to a File object
+          const compressedFile = new File([result], file.name, {
+            type: result.type,
+          });
+
+          setNewPhoto(compressedFile); // Set the compressed file
+        },
+        error(err) {
+          console.error("Image compression failed:", err);
+          alert("Failed to compress image.");
+        },
+      });
     }
   };
 
@@ -54,14 +74,24 @@ const VolunteerProfile: React.FC = () => {
       return;
     }
 
-    setUploading(true);
+    const fileSizeMB = newPhoto.size / (1024 * 1024); // Convert bytes to MB
+    console.log(`Compressed file size: ${fileSizeMB.toFixed(2)} MB`);
+
+    if (fileSizeMB > 5) {
+      alert("File size exceeds 5MB. Please upload a smaller file.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", newPhoto);
 
+    const encodedId = id ? encodeURIComponent(id) : '';
+
+    setUploading(true);
+
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/upload-photo/${id}`,
+        `${API_BASE_URL}/upload-photo/${encodedId}`,
         formData,
         {
           headers: {
@@ -83,16 +113,8 @@ const VolunteerProfile: React.FC = () => {
   };
 
   const handleBack = () => {
-navigate("/volunteer");
+    navigate("/volunteer");
   };
-  // const handleBack = () => {
-  //   if (id) {
-  //     const encodedId = btoa(id);
-  //     navigate(`/volunteer/${encodedId}`);
-  //   } else {
-  //     console.error("Volunteer ID is undefined");
-  //   }
-  // };
 
   if (loading) {
     return (
@@ -127,6 +149,7 @@ navigate("/volunteer");
             }
             alt={volunteer.name}
             className="w-40 h-40 object-cover rounded-full border-2 border-gray-300"
+            loading="lazy"
           />
           <label
             htmlFor="file-input"
