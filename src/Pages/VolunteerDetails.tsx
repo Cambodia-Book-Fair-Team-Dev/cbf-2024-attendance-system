@@ -49,9 +49,9 @@ const VolunteerProfile: React.FC = () => {
 
       // Compress the image using Compressor.js
       new Compressor(file, {
-        quality: 0.5, // Set quality to 60% (lower quality = higher compression)
-        maxWidth: 512, // Resize image to 200px width
-        maxHeight: 512, // Resize image to 200px height
+        quality: 0.5, // Set quality to 50% (lower quality = higher compression)
+        maxWidth: 256, // Resize image to 256px width
+        maxHeight: 256, // Resize image to 256px height
         success(result) {
           // Convert the Blob to a File object
           const compressedFile = new File([result], file.name, {
