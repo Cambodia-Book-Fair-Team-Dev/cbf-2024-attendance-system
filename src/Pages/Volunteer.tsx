@@ -55,8 +55,8 @@ const Volunteer: React.FC = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
               <th>Khmer Name</th>
+              <th>English Name</th>
               <th>Team</th>
             </tr>
           </thead>
@@ -67,8 +67,8 @@ const Volunteer: React.FC = () => {
                 onClick={() => handleRowClick(volunteer.id)}
               >
                 <td>{volunteer.id}</td>
-                <td>{volunteer.name}</td>
                 <td>{volunteer.kh_name}</td>
+                <td>{volunteer.name}</td>
                 <td>{volunteer.team}</td>
               </tr>
             ))}
