@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
         );
         setAttendances(response.data);
       } catch (error) {
-        setErrorMessage("មិនទាន់មានទិន្នន័យ");
+        setErrorMessage("មិនទាន់មានទិន្នន័យ / No data available");
       } finally {
         setLoading(false);
       }
