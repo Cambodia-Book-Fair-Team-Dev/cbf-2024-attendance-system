@@ -200,144 +200,163 @@ const QRScanner = () => {
   });
 
   return (
-    <div className="relative bg-white border-2 border-gray-300 p-3 w-11/12 sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-1/3 flex flex-col items-center justify-center rounded-lg shadow-lg mt-14 mx-auto">
-      {toast && (
-        <div
-          className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 p-2 bg-${
-            toast.type === "success" ? "blue-500" : "red-500"
-          } text-white rounded shadow-lg z-50`}
-        >
-          {toast.message}
-        </div>
-      )}
-      {loading && (
-        <div className="border-4 border-gray-200 border-t-4 border-t-blue-500 rounded-full w-8 h-8 animate-spin my-2 mx-auto"></div>
-      )}
-      {!volunteer ? (
-        <>
-          <h1 className="text-2xl text-gray-800 mb-5">Scan Volunteer Card</h1>
-          <Scanner
-            onScan={(result) => result && handleScan(result[0]?.rawValue || "")}
-          />
+    <div className="min-h-screen bg-gray-100 flex items-start justify-center p-6 mt-6">
+      <div className="relative bg-white border-2 border-gray-300 p-3 w-11/12 sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-1/3 flex flex-col items-center justify-center rounded-lg shadow-lg mx-auto">
+        {toast && (
           <div
-            {...getRootProps()}
-            className="border-2 border-dashed border-blue-500 rounded-lg p-5 text-center mt-5 cursor-pointer bg-blue-50 transition-all duration-300 hover:bg-blue-100 hover:border-blue-700"
+            className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 p-3 ${
+              toast.type === "success" ? "bg-green-500" : "bg-red-500"
+            } text-white rounded-lg shadow-lg z-50 transition-opacity duration-300`}
           >
-            <input {...getInputProps()} />
-            <p className="text-gray-600">
-              Drag & drop an image with a QR code here, or{" "}
-              <span className="underline cursor-pointer">
-                click to select a file
-              </span>
-            </p>
+            {toast.message}
           </div>
-        </>
-      ) : (
-        <>
-          <div className="relative w-full flex items-center justify-between mb-5">
-            <ArrowBackIcon
-              className="absolute top-2 left-2 text-gray-800 cursor-pointer transition-all duration-300 hover:text-blue-500 hover:scale-110"
-              onClick={handleBack}
-              aria-label="Go back to scan page"
-            />
-            <h2 className="text-2xl font-bold text-center text-black-800 w-full">
-              Volunteer Information
-            </h2>
+        )}
+        {loading && (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
           </div>
-
-          <div className="flex flex-col items-center">
-            <img
-              src={
-                volunteer.photo_url
-                  ? `${API_BASE_URL}${volunteer.photo_url}`
-                  : "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
-              }
-              alt={volunteer.name}
-              className="w-40 h-40 object-cover rounded-full border-2 border-gray-300 mb-4"
-            />
-            <h3 className="text-3xl text-black font-kantumruy">
-              {volunteer.kh_name}
-            </h3>
-            <h3 className="text-2xl text-gray-800">{volunteer.name}</h3>
-            <h3 className="text-xl text-gray-800">Team: {volunteer.team}</h3>
-          </div>
-          {!attendanceStatus.checked_in ? (
-            <button
-              className="inline-block mt-4 rounded-full border-2 border-primary px-10 pb-[7px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary-accent-300 hover:bg-primary-50/50 hover:text-primary-accent-300 focus:border-primary-600 focus:bg-primary-50/50 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 motion-reduce:transition-none dark:text-primary-500 dark:hover:bg-blue-950 dark:focus:bg-blue-950"
-              onClick={() => handleAction("checkin")}
+        )}
+        {!volunteer ? (
+          <>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center font-kantumruy">
+              ស្គែនកាតអ្នកស្ម័គ្រចិត្ត
+            </h1>
+            <div className="mb-6">
+              <Scanner
+                onScan={(result) =>
+                  result && handleScan(result[0]?.rawValue || "")
+                }
+                classNames={{ container: "w-full" }}
+              />
+            </div>
+            <div
+              {...getRootProps()}
+              className="border-2 border-dashed border-blue-500 rounded-lg p-6 text-center cursor-pointer bg-blue-50 transition-all duration-300 hover:bg-blue-100 hover:border-blue-700"
             >
-              Check-In
-            </button>
-          ) : (
-            <>
+              <input {...getInputProps()} />
+              <p className="text-gray-600">
+                Drag & drop an image with a QR code here, or{" "}
+                <span className="text-blue-500 underline">
+                  click to select a file
+                </span>
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="relative w-full flex items-center justify-center mb-6">
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
-                onClick={() => setShowMealOptions(true)}
+                onClick={handleBack}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors duration-300"
+                aria-label="Go back to scan page"
               >
-                Check Meal
+                <ArrowBackIcon />
               </button>
-              <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
-                onClick={() => {
-                  setShowReturnConfirmation(true);
-                }}
-              >
-                Check-Out
-              </button>
-              {attendanceStatus.checked_out && attendanceStatus.returning && (
+              <h2 className="text-2xl font-bold text-gray-800">
+                Volunteer Information
+              </h2>
+            </div>
+
+            <div className="flex flex-col items-center mb-6">
+              <img
+                src={
+                  volunteer.photo_url
+                    ? `${API_BASE_URL}${volunteer.photo_url}`
+                    : "https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
+                }
+                alt={volunteer.name}
+                className="w-32 h-32 object-cover rounded-full border-4 border-blue-500 mb-4"
+              />
+              <h3 className="text-2xl font-bold text-gray-800 font-kantumruy mb-1">
+                {volunteer.kh_name}
+              </h3>
+              <h3 className="text-xl text-gray-600 mb-1">{volunteer.name}</h3>
+              <h3 className="text-lg text-gray-500">Team: {volunteer.team}</h3>
+            </div>
+
+            <div className="space-y-4">
+              {!attendanceStatus.checked_in ? (
                 <button
-                  className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                  className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   onClick={() => handleAction("checkin")}
                 >
-                  Check-In Again
+                  Check-In
                 </button>
+              ) : (
+                <>
+                  <button
+                    className="w-full py-2 px-4 bg-green-500 text-white rounded-lg transition-all duration-300 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                    onClick={() => setShowMealOptions(true)}
+                  >
+                    Check Meal
+                  </button>
+                  <button
+                    className="w-full py-2 px-4 bg-red-500 text-white rounded-lg transition-all duration-300 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                    onClick={() => setShowReturnConfirmation(true)}
+                  >
+                    Check-Out
+                  </button>
+                  {attendanceStatus.checked_out &&
+                    attendanceStatus.returning && (
+                      <button
+                        className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        onClick={() => handleAction("checkin")}
+                      >
+                        Check-In Again
+                      </button>
+                    )}
+                </>
               )}
-            </>
-          )}
-          {showMealOptions && (
-            <div className="flex flex-col items-center mt-5">
-              <button
-                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
-                  attendanceStatus.meals.breakfast
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-700"
-                }`}
-                onClick={() => handleAction("checkmeal", "breakfast")}
-                disabled={attendanceStatus.meals.breakfast}
-              >
-                Breakfast
-              </button>
-              <button
-                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
-                  attendanceStatus.meals.lunch
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-700"
-                }`}
-                onClick={() => handleAction("checkmeal", "lunch")}
-                disabled={attendanceStatus.meals.lunch}
-              >
-                Lunch
-              </button>
-              <button
-                className={`px-4 py-2 text-white rounded-lg transition-all duration-300 mt-2 ${
-                  attendanceStatus.meals.dinner
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-700"
-                }`}
-                onClick={() => handleAction("checkmeal", "dinner")}
-                disabled={attendanceStatus.meals.dinner}
-              >
-                Dinner
-              </button>
             </div>
-          )}
-          {showReturnConfirmation && (
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-lg shadow-lg z-50">
-              <h3 className="text-lg text-gray-800 mb-3">
+
+            {showMealOptions && (
+              <div className="mt-6 space-y-3">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  Check Meal
+                </h3>
+                {["breakfast", "lunch", "dinner"].map((meal) => (
+                  <button
+                    key={meal}
+                    className={`w-full py-2 px-4 rounded-lg transition-all duration-300 ${
+                      attendanceStatus.meals[
+                        meal as keyof typeof attendanceStatus.meals
+                      ]
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    }`}
+                    onClick={() => handleAction("checkmeal", meal)}
+                    disabled={
+                      attendanceStatus.meals[
+                        meal as keyof typeof attendanceStatus.meals
+                      ]
+                    }
+                  >
+                    {meal.charAt(0).toUpperCase() + meal.slice(1)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {showReturnConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => setShowReturnConfirmation(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <ArrowBackIcon />
+              </button>
+              <h3 className="text-xl font-semibold text-gray-800">
                 Will you return today?
               </h3>
+            </div>
+            <div className="flex space-x-4">
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                className="flex-1 py-2 px-4 bg-green-500 text-white rounded-lg transition-all duration-300 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                 onClick={() => {
                   setReturning(true);
                   setShowReturnConfirmation(false);
@@ -346,7 +365,7 @@ const QRScanner = () => {
                 Yes
               </button>
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
+                className="flex-1 py-2 px-4 bg-red-500 text-white rounded-lg transition-all duration-300 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                 onClick={() => {
                   setReturning(false);
                   handleCheckout();
@@ -355,24 +374,39 @@ const QRScanner = () => {
                 No
               </button>
             </div>
-          )}
-          {returning && (
-            <div className="mt-5 p-3 border border-blue-500 bg-blue-100 rounded-lg">
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded-lg"
-                placeholder="Add a note for your return"
-                value={returnNote}
-                onChange={(e) => setReturnNote(e.target.value)}
-              />
+          </div>
+        </div>
+      )}
+
+      {returning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-lg transition-all duration-300 hover:bg-blue-700 mt-2"
-                onClick={handleCheckout}
+                onClick={() => setReturning(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
               >
-                Submit
+                <ArrowBackIcon />
               </button>
+              <h3 className="text-xl font-semibold text-gray-800">
+                Add a note for your return
+              </h3>
             </div>
-          )}
-        </>
+            <textarea
+              className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              placeholder="Add a note for your return"
+              value={returnNote}
+              onChange={(e) => setReturnNote(e.target.value)}
+              rows={4}
+            />
+            <button
+              className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              onClick={handleCheckout}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
